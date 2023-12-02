@@ -18,7 +18,12 @@ class TestRoutes(TestCase):
         cls.author_client = Client()
         cls.auth_client.force_login(cls.user)
         cls.author_client.force_login(cls.author)
-        cls.note = Note.objects.create(title='Заголовок', text='Текст заметки', slug='note-slug', author=cls.author)
+        cls.note = Note.objects.create(
+            title='Заголовок',
+            text='Текст заметки',
+            slug='note-slug',
+            author=cls.author
+        )
 
     def test_note_in_list_for_author(self):
         for name in ('notes:list',):
@@ -28,7 +33,6 @@ class TestRoutes(TestCase):
                 object_list = response.context['object_list']
                 self.assertIn(self.note, object_list)
 
-
     def test_note_not_in_list_for_another_user(self):
         for name in ('notes:list',):
             with self.subTest(name=name):
@@ -37,11 +41,10 @@ class TestRoutes(TestCase):
                 object_list = response.context['object_list']
                 self.assertIsNot(self.note, object_list)
 
-
     def test_pages_contains_form(self):
         for name, args in (
-             ('notes:add', None),
-             ('notes:edit', (self.note.slug,)),
+            ('notes:add', None),
+            ('notes:edit', (self.note.slug,)),
         ):
             with self.subTest(name=name):
                 url = reverse(name, args=args)

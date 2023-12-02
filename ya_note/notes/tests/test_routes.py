@@ -18,7 +18,12 @@ class TestRoutes(TestCase):
         cls.user = User.objects.create(username='Мимо Крокодил')
         cls.auth_client = Client()
         cls.auth_client.force_login(cls.user)
-        cls.note = Note.objects.create(title='Заголовок', text='Текст заметки', slug='note-slug', author=cls.author)
+        cls.note = Note.objects.create(
+            title='Заголовок',
+            text='Текст заметки',
+            slug='note-slug',
+            author=cls.author
+        )
 
     def test_pages_availability_for_anonymous_user(self):
         for name in (
@@ -32,7 +37,6 @@ class TestRoutes(TestCase):
                 response = self.client.get(url)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
 
-
     def test_pages_availability_for_auth_user(self):
         for name in (
             'notes:list',
@@ -43,7 +47,6 @@ class TestRoutes(TestCase):
                 url = reverse(name)
                 response = self.auth_client.get(url)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
-
 
     def test_pages_availability_for_different_users(self):
         users_statuses = (
@@ -56,12 +59,11 @@ class TestRoutes(TestCase):
                 'notes:detail',
                 'notes:edit',
                 'notes:delete'
-            ):  
-                with self.subTest(user=user, name=name):        
+            ):
+                with self.subTest(user=user, name=name):
                     url = reverse(name, args=(self.note.slug,))
                     response = self.client.get(url)
                     self.assertEqual(response.status_code, status)
-
 
     def test_redirects(self):
         login_url = reverse('users:login')

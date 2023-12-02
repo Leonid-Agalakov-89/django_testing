@@ -14,7 +14,7 @@ def test_with_client(client):
 
 
 @pytest.fixture
-def author(django_user_model):  
+def author(django_user_model):
     return django_user_model.objects.create(username='Автор')
 
 
@@ -42,7 +42,7 @@ def comment(author, news):
 
 
 @pytest.fixture
-def pk_for_args(news):  
+def pk_for_args(news):
     return news.pk,
 
 
@@ -72,20 +72,20 @@ def edit_url(comment):
 
 @pytest.fixture
 def delete_url(comment):
-    return reverse('news:delete', args=(comment.id,)) 
+    return reverse('news:delete', args=(comment.id,))
 
 
 @pytest.fixture
 def bulk_create_news():
     today = datetime.today()
     return News.objects.bulk_create(
-            News(
-                title=f'Новость {index}',
-                text='Просто текст.',
-                date=today - timedelta(days=index)
-            )
-            for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
+        News(
+            title=f'Новость {index}',
+            text='Просто текст.',
+            date=today - timedelta(days=index)
         )
+        for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
+    )
 
 
 @pytest.fixture

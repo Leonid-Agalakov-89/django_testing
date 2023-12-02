@@ -55,6 +55,6 @@ def test_availability_for_comment_edit_and_delete(
 def test_redirects(client, name, args):
     login_url = reverse('users:login')
     url = reverse(name, args=args)
-    redirect_url  = f'{login_url}?next={url}'
+    redirect_url = f'{login_url}?next={url}'
     response = client.get(url)
     assertRedirects(response, redirect_url)

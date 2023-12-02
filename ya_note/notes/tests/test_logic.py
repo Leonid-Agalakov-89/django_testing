@@ -43,7 +43,6 @@ class TestLogicCreateNoteAndEmptySlug(TestCase):
         self.assertRedirects(response, expected_url)
         self.assertEqual(Note.objects.count(), 0)
 
-
     def test_empty_slug(self):
         url = reverse('notes:add')
         self.form_data.pop('slug')
@@ -65,7 +64,12 @@ class TestLogicUniqueSlugAndEditDeleteNote(TestCase):
         cls.user = User.objects.create(username='Мимо Крокодил')
         cls.auth_client = Client()
         cls.auth_client.force_login(cls.user)
-        cls.note = Note.objects.create(title='Заголовок', text='Текст заметки', slug='note-slug', author=cls.author)
+        cls.note = Note.objects.create(
+            title='Заголовок',
+            text='Текст заметки',
+            slug='note-slug',
+            author=cls.author
+        )
         cls.form_data = {
             'title': 'Новый заголовок',
             'text': 'Новый текст',
@@ -80,7 +84,6 @@ class TestLogicUniqueSlugAndEditDeleteNote(TestCase):
             self.note.slug + WARNING))
         self.assertEqual(Note.objects.count(), 1)
 
-
     def test_author_can_edit_note(self):
         url = reverse('notes:edit', args=(self.note.slug,))
         response = self.author_client.post(url, self.form_data)
@@ -89,7 +92,6 @@ class TestLogicUniqueSlugAndEditDeleteNote(TestCase):
         self.assertEqual(self.note.title, self.form_data['title'])
         self.assertEqual(self.note.text, self.form_data['text'])
         self.assertEqual(self.note.slug, self.form_data['slug'])
-
 
     def test_other_user_cant_edit_note(self):
         url = reverse('notes:edit', args=(self.note.slug,))
@@ -100,13 +102,11 @@ class TestLogicUniqueSlugAndEditDeleteNote(TestCase):
         self.assertEqual(self.note.text, note_from_db.text)
         self.assertEqual(self.note.slug, note_from_db.slug)
 
-
     def test_author_can_delete_note(self):
         url = reverse('notes:delete', args=(self.note.slug,))
         response = self.author_client.post(url)
         self.assertRedirects(response, reverse('notes:success'))
         self.assertEqual(Note.objects.count(), 0)
-
 
     def test_other_user_cant_delete_note(self):
         url = reverse('notes:delete', args=(self.note.slug,))
