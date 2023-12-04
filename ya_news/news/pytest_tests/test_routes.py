@@ -1,26 +1,21 @@
 from http import HTTPStatus
 
 import pytest
-from django.urls import reverse
 from pytest_django.asserts import assertRedirects
 
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    'name, news_object',
+    'url',
     (
-        ('news:home', None),
-        ('news:detail', pytest.lazy_fixture('news')),
-        ('users:login', None),
-        ('users:logout', None),
-        ('users:signup', None)
+        pytest.lazy_fixture('home_url'),
+        pytest.lazy_fixture('news_url'),
+        pytest.lazy_fixture('login_url'),
+        pytest.lazy_fixture('logout_url'),
+        pytest.lazy_fixture('signup_url')
     ),
 )
-def test_pages_availability_for_anonymous_user(client, name, news_object):
-    if news_object is not None:
-        url = reverse(name, args=(news_object.pk,))
-    else:
-        url = reverse(name)
+def test_pages_availability_for_anonymous_user(client, url):
     response = client.get(url)
     assert response.status_code == HTTPStatus.OK
 
@@ -33,28 +28,29 @@ def test_pages_availability_for_anonymous_user(client, name, news_object):
     ),
 )
 @pytest.mark.parametrize(
-    'name',
-    ('news:edit', 'news:delete'),
+    'url',
+    (
+        pytest.lazy_fixture('edit_url'),
+        pytest.lazy_fixture('delete_url'),
+    ),
 )
 def test_availability_for_comment_edit_and_delete(
-        parametrized_client, name, comment, expected_status
+        parametrized_client, expected_status, url
 ):
-    url = reverse(name, args=(comment.id,))
     response = parametrized_client.get(url)
     assert response.status_code == expected_status
 
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    'name, args',
+    'url',
     (
-        ('news:edit', pytest.lazy_fixture('pk_for_args')),
-        ('news:delete', pytest.lazy_fixture('pk_for_args')),
+        pytest.lazy_fixture('edit_url'),
+        pytest.lazy_fixture('delete_url'),
     ),
 )
-def test_redirects(client, name, args):
-    login_url = reverse('users:login')
-    url = reverse(name, args=args)
+def test_redirects(client, login_url, url):
+    login_url = login_url
     redirect_url = f'{login_url}?next={url}'
     response = client.get(url)
     assertRedirects(response, redirect_url)

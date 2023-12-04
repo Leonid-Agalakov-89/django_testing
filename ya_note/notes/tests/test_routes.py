@@ -14,7 +14,11 @@ class TestRoutes(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.author = User.objects.create(username='Лев Толстой')
+        cls.author_client = Client()
+        cls.author_client.force_login(cls.author)
         cls.reader = User.objects.create(username='Читатель простой')
+        cls.reader_client = Client()
+        cls.reader_client.force_login(cls.reader)
         cls.user = User.objects.create(username='Мимо Крокодил')
         cls.auth_client = Client()
         cls.auth_client.force_login(cls.user)
@@ -50,19 +54,19 @@ class TestRoutes(TestCase):
 
     def test_pages_availability_for_different_users(self):
         users_statuses = (
-            (self.author, HTTPStatus.OK),
-            (self.reader, HTTPStatus.NOT_FOUND),
+            (self.author_client, HTTPStatus.OK),
+            (self.reader_client, HTTPStatus.NOT_FOUND),
         )
-        for user, status in users_statuses:
-            self.client.force_login(user)
+        for user_client, status in users_statuses:
+            # self.client.force_login(user)
             for name in (
                 'notes:detail',
                 'notes:edit',
                 'notes:delete'
             ):
-                with self.subTest(user=user, name=name):
+                with self.subTest(user_client=user_client, name=name):
                     url = reverse(name, args=(self.note.slug,))
-                    response = self.client.get(url)
+                    response = user_client.get(url)
                     self.assertEqual(response.status_code, status)
 
     def test_redirects(self):

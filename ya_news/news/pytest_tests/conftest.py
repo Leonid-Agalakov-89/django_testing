@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from django.test import Client
 
 import pytest
 from django.conf import settings
@@ -8,11 +9,6 @@ from django.utils import timezone
 from news.models import Comment, News
 
 
-def test_with_client(client):
-    response = client.get('/')
-    assert response.status_code == 200
-
-
 @pytest.fixture
 def author(django_user_model):
     return django_user_model.objects.create(username='Автор')
@@ -20,6 +16,7 @@ def author(django_user_model):
 
 @pytest.fixture
 def author_client(author, client):
+    client = Client()
     client.force_login(author)
     return client
 
@@ -42,22 +39,8 @@ def comment(author, news):
 
 
 @pytest.fixture
-def pk_for_args(news):
-    return news.pk,
-
-
-@pytest.fixture
-def form_data():
-    return {
-        'news': 'Новость',
-        'author': 'Автор',
-        'text': 'Текст комментария'
-    }
-
-
-@pytest.fixture
-def new_form_data():
-    return {'text': 'Обновлённый комментарий'}
+def home_url():
+    return reverse('news:home')
 
 
 @pytest.fixture
@@ -73,6 +56,21 @@ def edit_url(comment):
 @pytest.fixture
 def delete_url(comment):
     return reverse('news:delete', args=(comment.id,))
+
+
+@pytest.fixture
+def login_url():
+    return reverse('users:login')
+
+
+@pytest.fixture
+def logout_url():
+    return reverse('users:logout')
+
+
+@pytest.fixture
+def signup_url():
+    return reverse('users:signup')
 
 
 @pytest.fixture
@@ -97,4 +95,3 @@ def create_comments(news, author):
         )
         comment.created = now + timedelta(days=index)
         comment.save()
-    return comment
