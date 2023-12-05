@@ -15,7 +15,7 @@ def author(django_user_model):
 
 
 @pytest.fixture
-def author_client(author, client):
+def author_client(author):
     client = Client()
     client.force_login(author)
     return client
