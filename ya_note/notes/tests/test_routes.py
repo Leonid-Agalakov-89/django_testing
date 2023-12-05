@@ -58,7 +58,6 @@ class TestRoutes(TestCase):
             (self.reader_client, HTTPStatus.NOT_FOUND),
         )
         for user_client, status in users_statuses:
-            # self.client.force_login(user)
             for name in (
                 'notes:detail',
                 'notes:edit',
