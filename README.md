@@ -1,52 +1,67 @@
-# Django testing  
-## Если вы успели выполнить все домашние задания — ваш финальный проект готов.
-Перенесите тесты из ваших проектов в данный репозиторий (**django_testing**), который появился в вашем аккаунте.  
-В итоге должна получиться следующая структура репозитория:
+## О проекте:
+
+Данный проект представляет из себя коллекцию тестов для двух веб-приложений (сайты с новостями и заметками пользователя) на pytest и unittest.
+
+## Как запустить проект:
+
+1) Клонировать репозиторий и перейти в него в командной строке:
+
 ```
-Dev
- └── django_testing
-     ├── ya_news
-     │   ├── news
-     │   │   ├── fixtures/
-     │   │   ├── migrations/
-     │   │   ├── pytest_tests/   <- Директория с вашими тестами pytest для проекта ya_news
-     │   │   ├── __init__.py
-     │   │   ├── admin.py
-     │   │   ├── apps.py
-     │   │   ├── forms.py
-     │   │   ├── models.py
-     │   │   ├── urls.py
-     │   │   └── views.py
-     │   ├── templates/
-     │   ├── yanews/
-     │   ├── manage.py
-     │   └── pytest.ini
-     ├── ya_note
-     │   ├── notes
-     │   │   ├── migrations/
-     │   │   ├── tests/          <- Директория с вашими тестами unittest для проекта ya_note
-     │   │   ├── __init__.py
-     │   │   ├── admin.py
-     │   │   ├── apps.py
-     │   │   ├── forms.py
-     │   │   ├── models.py
-     │   │   ├── urls.py
-     │   │   └── views.py
-     │   ├── templates/
-     │   ├── yanote/
-     │   ├── manage.py
-     │   └── pytest.ini
-     ├── .gitignore
-     ├── README.md
-     ├── requirements.txt
-     └── structure_test.py
+git clone https://github.com/Leonid-Agalakov-89/django_testing.git
 ```
 
-## После копирования тестов, написанных в ходе прохождения спринта, для проверки готовности проекта к сдаче необходимо выполнить 4 действия:
-1. Создать и активировать виртуальное окружение; установить зависимости из файла `requirements.txt`;
-2. Запустить скрипт для `run_tests.sh` из корневой директории проекта:
+```
+cd django_testing
+```
+
+2) Cоздать и активировать виртуальное окружение:
+
+```
+python -m venv env
+```
+
+```
+source env/bin/activate
+```
+
+3) Установить зависимости из файла requirements.txt:
+
+```
+python -m pip install --upgrade pip
+```
+
+```
+pip install -r requirements.txt
+```
+
+4) Выполнить миграции:
+
+```
+python manage.py makemigrations
+```
+
+```
+python manage.py migrate
+```
+
+5) Запустить скрипт для `run_tests.sh` из корневой директории проекта:
 ```sh
 bash run_tests.sh
 ```
 
-**Если все проверки успешно выполнились, проект можно отправлять на ревью.**
+## Технологии:
+
+Backend
+* Django
+* SQLite
+
+Frontend
+* HTML
+
+Tests
+* pytest
+* unittest
+
+## Об авторе:
+Леонид Агалаков - python backend developer.
+`https://github.com/Leonid-Agalakov-89`
